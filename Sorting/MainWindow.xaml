@@ -6,18 +6,108 @@
         xmlns:local="clr-namespace:Sorting"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1280">
+        Title="MainWindow" Height="720" Width="1280" Background="#FF161616">
+
+    <Window.OpacityMask>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Black" Offset="0"/>
+            <GradientStop Color="White" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.OpacityMask>
+
     <Grid>
-        <lvc:CartesianChart Series="{Binding SeriesCollection}" Margin="150,0,0,0">
-            <lvc:CartesianChart.AxisX>
-                <lvc:Axis Title="X"/>
-            </lvc:CartesianChart.AxisX>
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis Title="Y"/>
-            </lvc:CartesianChart.AxisY>
-        </lvc:CartesianChart>
-        <Button Content="Sort" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" Width="120" Height="32" Click="Button_Click_Sort"/>
-        <Button Content="QuickSort" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_QuickSort"/>
-        <Button Content="SelectionSort" HorizontalAlignment="Left" Margin="85,90,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_SelectionSort"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*"/>
+            <ColumnDefinition Width="1080*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2">
+            <Grid.Resources>
+                <SolidColorBrush x:Key="ButtonRest">#FF080808</SolidColorBrush>
+
+                <Style x:Key="RoundedButton" TargetType="{x:Type Button}">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontFamily" Value="Raleway Medium"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="VerticalAlignment" Value="Top"/>
+                    <Setter Property="HorizontalAlignment" Value="Left"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid x:Name="grid">
+                                    <Border x:Name="border" 
+                                            CornerRadius="12"
+                                            Background="{StaticResource ButtonRest}">
+                                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          TextElement.FontWeight="Bold">
+                                        </ContentPresenter>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" TargetName="border" Value="#FF6A3A6A"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="BorderThickness" TargetName="border" Value="1"/>
+                                        <Setter Property="BorderBrush" TargetName="border" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter Property="BorderThickness" TargetName="border" Value="0"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Grid.Resources>
+
+            <Button Content="SORT" Style="{DynamicResource RoundedButton}" Margin="40,30,0,0" Width="120" Height="32" Click="Button_Click_Sort"  FontSize="20" />
+            <Path Data="M31.5,74 L165.50373,74" Fill="{StaticResource ButtonRest}" HorizontalAlignment="Center" Height="2" Margin="0,75,0,0" Stretch="Fill" VerticalAlignment="Top" Width="135" Stroke="{DynamicResource ButtonRest}" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeThickness="2"/>
+            <Button Content="Quick" Style="{DynamicResource RoundedButton}" Margin="0,90,95,0" Width="90" Height="30" Click="Button_Click_QuickSort" HorizontalAlignment="Center"/>
+            <Button Content="Selection" Style="{DynamicResource RoundedButton}" Margin="95,90,0,0" Width="90" Height="30" Click="Button_Click_SelectionSort" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Grid Margin="0,10,10,10" Grid.Column="1">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity="0.2" ShadowDepth="1"/>
+            </Grid.Effect>
+            <Grid.Resources>
+                <Style TargetType="lvc:ColumnSeries">
+                    <Setter Property="StrokeThickness" Value="0"/>
+                    <Setter Property="Stroke" Value="White"/>
+                    <Setter Property="Fill" Value="White"/>
+                    <!--<Setter Property="MaxColumnWidth" Value="5"/>-->
+                    <Setter Property="LabelsPosition" Value="Merged"/>
+                </Style>
+                <Style TargetType="lvc:Axis">
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Foreground" Value="#64FFFFFF"/>
+                    <Setter Property="ShowLabels" Value="False"/>
+                </Style>
+                <Style TargetType="lvc:Separator">
+                    <Setter Property="StrokeThickness" Value="1"/>
+                    <Setter Property="Stroke" Value="#4BFFFFFF"/>
+                    <Style.Triggers>
+                        <Trigger Property="AxisOrientation" Value="X">
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Setter Property="Step" Value="1"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <lvc:CartesianChart Series="{Binding SeriesCollection}" Hoverable="False" DataTooltip="{x:Null}">
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis/>
+                </lvc:CartesianChart.AxisX>
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis MaxValue="{Binding _size}"/>
+                </lvc:CartesianChart.AxisY>
+            </lvc:CartesianChart>
+        </Grid>
     </Grid>
 </Window>

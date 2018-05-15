@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using LiveCharts;
@@ -14,24 +15,62 @@ namespace Sorting
     public partial class MainWindow : Window
     {
         private int[] array;
+        private bool _initialized = false;
         private int _sortingMethod = 1;
+        private int _size = 300;
 
         public MainWindow()
         {
             InitializeComponent();
-            SeriesCollection = new SeriesCollection { };
+            
+            _init();
+            this.DataContext = this;
+        }
 
-            array = new int[100];
-            for (int i = 0; i < array.Length; i++)
+        private void _init()
+        {
+            Random random = new Random();
+
+            array = _InitializeArray(random);
+
+            if (_initialized)
             {
-                array[i] = 100 - i;
-                SeriesCollection.Add(new ColumnSeries
+                int i = 0;
+                foreach (ColumnSeries j in SeriesCollection)
                 {
-                    Values = new ChartValues<double> { array[i] }
-                });
+                    j.Values.Add((double)array[i]);
+                    j.Values.RemoveAt(0);
+                    i++;
+                }
             }
+            else
+            {
+                SeriesCollection = new SeriesCollection { };
+                for (int i = 0; i < array.Length - 1; i++)
+                {
+                    SeriesCollection.Add(new ColumnSeries
+                    {
+                        Values = new ChartValues<double>
+                        {
+                            (double)array[i]
+                        }
+                    });
+                }
+                _initialized = true;
+            }
+        }
 
-            DataContext = this;
+        private int[] _InitializeArray(Random random)
+        {
+            int[] deck = new int[_size];
+            int[] order = new int[_size];
+            for (int i = 0; i < deck.Length; i++)
+            {
+                deck[i] = i + 1;
+                order[i] = random.Next();
+            }
+            Array.Sort(order, deck);
+            return deck;
         }
 
         public SeriesCollection SeriesCollection { get; set; }
@@ -65,30 +104,22 @@ namespace Sorting
 //#if NET45
             Task.Run(() =>
             {
-                switch (_sortingMethod)
-                {
-                    case 0:
-                        Algorithms.SelectionSort(array);
-                        break;
-                    case 1:
-                        Algorithms.QuickSort(array, 0, array.Length - 1);
-                        break;
-                    default:
-                        Algorithms.QuickSort(array, 0, array.Length - 1);
-                        break;
-                }
                 while (true)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        int i = 0;
-                        foreach (ColumnSeries j in SeriesCollection)
+                        switch (_sortingMethod)
                         {
-                            j.Values.Add((double)array[i]);
-                            j.Values.RemoveAt(0);
-                            i++;
+                            case 0:
+                                Algorithms.SelectionSort(array, SeriesCollection);
+                                break;
+                            case 1:
+                                Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
+                                break;
+                            default:
+                                Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
+                                break;
                         }
-                        
                     });
                     break;
                 }
@@ -99,11 +130,33 @@ namespace Sorting
         private void Button_Click_QuickSort(object sender, RoutedEventArgs e)
         {
             _sortingMethod = Algorithms.List.QuickSort;
+            Task.Run(() =>
+            {
+                while(true)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _init();
+                    });
+                    break;
+                }
+            });
         }
 
         private void Button_Click_SelectionSort(object sender, RoutedEventArgs e)
         {
             _sortingMethod = Algorithms.List.SelectionSort;
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _init();
+                    });
+                    break;
+                }
+            });
         }
     }
 }
