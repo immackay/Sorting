@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1280">
     <Grid>
-        <lvc:CartesianChart Series="{Binding SeriesCollection}">
+        <lvc:CartesianChart Series="{Binding SeriesCollection}" Margin="150,0,0,0">
             <lvc:CartesianChart.AxisX>
                 <lvc:Axis Title="X"/>
             </lvc:CartesianChart.AxisX>
@@ -16,5 +16,8 @@
                 <lvc:Axis Title="Y"/>
             </lvc:CartesianChart.AxisY>
         </lvc:CartesianChart>
+        <Button Content="Sort" HorizontalAlignment="Left" Margin="25,25,0,0" VerticalAlignment="Top" Width="120" Height="32" Click="Button_Click_Sort"/>
+        <Button Content="QuickSort" HorizontalAlignment="Left" Margin="10,90,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_QuickSort"/>
+        <Button Content="SelectionSort" HorizontalAlignment="Left" Margin="85,90,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_SelectionSort"/>
     </Grid>
 </Window>

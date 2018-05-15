@@ -1,22 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using LiveCharts;
-using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 
 namespace Sorting
@@ -26,17 +13,15 @@ namespace Sorting
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            MainLoop();
-        }
+        private int[] array;
+        private int _sortingMethod = 1;
 
-        void MainLoop()
+        public MainWindow()
         {
             InitializeComponent();
             SeriesCollection = new SeriesCollection { };
 
-            int[] array = new int[101];
+            array = new int[100];
             for (int i = 0; i < array.Length; i++)
             {
                 array[i] = 100 - i;
@@ -46,13 +31,13 @@ namespace Sorting
                 });
             }
 
+            DataContext = this;
+        }
 
-            //
-            //
-            // might need to iterate through and set SeriesCollection[i] to array[i]
-            // then run sorting algorithm (if activated?)
-            //
-            //
+        public SeriesCollection SeriesCollection { get; set; }
+
+        private void Button_Click_Sort(object sender, RoutedEventArgs e)
+        {
 #if NET40
             Task.Factory.StartNew(() =>
             {
@@ -72,17 +57,28 @@ namespace Sorting
  
                 while (true)
                 {
-                    Thread.Sleep(500);
                     Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, action);
+                    break;
                 }
             });
 #endif
 //#if NET45
             Task.Run(() =>
             {
+                switch (_sortingMethod)
+                {
+                    case 0:
+                        Algorithms.SelectionSort(array);
+                        break;
+                    case 1:
+                        Algorithms.QuickSort(array, 0, array.Length - 1);
+                        break;
+                    default:
+                        Algorithms.QuickSort(array, 0, array.Length - 1);
+                        break;
+                }
                 while (true)
                 {
-                    Thread.Sleep(500);
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         int i = 0;
@@ -92,49 +88,22 @@ namespace Sorting
                             j.Values.RemoveAt(0);
                             i++;
                         }
-                        QuickSort(array, 0, array.Length - 1);
-                        // SetLecture();
+                        
                     });
+                    break;
                 }
             });
 //#endif
-
-            DataContext = this;
         }
 
-        public int[] QuickSort(int[] array, int lo, int hi)
+        private void Button_Click_QuickSort(object sender, RoutedEventArgs e)
         {
-            if (lo < hi)
-            {
-                int p = _partition(array, lo, hi);
-                array = QuickSort(array, lo, p - 1);
-                array = QuickSort(array, p + 1, hi);
-            }
-            
-            return array;
+            _sortingMethod = Algorithms.List.QuickSort;
         }
 
-        private int _partition(int[] A, int lo, int hi)
+        private void Button_Click_SelectionSort(object sender, RoutedEventArgs e)
         {
-            int pivot = A[hi];
-            int i = lo - 1;
-
-            for (int j = lo; j < hi; j++)
-            {
-                if (A[j] < pivot)
-                {
-                    i = i + 1;
-                    int t1 = A[i];
-                    A[i] = A[j];
-                    A[j] = t1;
-                }
-            }
-            int t2 = A[i + 1];
-            A[i + 1] = A[hi];
-            A[hi] = t2;
-            return i + 1;
+            _sortingMethod = Algorithms.List.SelectionSort;
         }
-
-        public SeriesCollection SeriesCollection { get; set; }
     }
 }
