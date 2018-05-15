@@ -22,6 +22,11 @@ namespace Sorting
     {
         public MainWindow()
         {
+            MainLoop();
+        }
+
+        void MainLoop()
+        {
             InitializeComponent();
         }
     }
