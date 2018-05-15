@@ -23,7 +23,7 @@
 
         <Grid HorizontalAlignment="Left" Width="200" Grid.ColumnSpan="2">
             <Grid.Resources>
-                <SolidColorBrush x:Key="ButtonRest">#FF080808</SolidColorBrush>
+                <SolidColorBrush x:Key="ButtonRest">#FF121212</SolidColorBrush>
 
                 <Style x:Key="RoundedButton" TargetType="{x:Type Button}">
                     <Setter Property="Foreground" Value="White"/>
@@ -47,11 +47,11 @@
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsPressed" Value="True">
-                                        <Setter Property="Background" TargetName="border" Value="#FF6A3A6A"/>
+                                        <Setter Property="Background" TargetName="border" Value="#FF333333"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="BorderThickness" TargetName="border" Value="1"/>
-                                        <Setter Property="BorderBrush" TargetName="border" Value="White"/>
+                                        <Setter Property="BorderBrush" TargetName="border" Value="Black"/>
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="BorderThickness" TargetName="border" Value="0"/>
@@ -66,21 +66,51 @@
                 </Style>
             </Grid.Resources>
 
-            <Button Content="SORT" Style="{DynamicResource RoundedButton}" Margin="40,30,0,0" Width="120" Height="32" Click="Button_Click_Sort"  FontSize="20" />
-            <Path Data="M31.5,74 L165.50373,74" Fill="{StaticResource ButtonRest}" HorizontalAlignment="Center" Height="2" Margin="0,75,0,0" Stretch="Fill" VerticalAlignment="Top" Width="135" Stroke="{DynamicResource ButtonRest}" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeThickness="2"/>
-            <Button Content="Quick" Style="{DynamicResource RoundedButton}" Margin="0,90,95,0" Width="90" Height="30" Click="Button_Click_QuickSort" HorizontalAlignment="Center"/>
-            <Button Content="Selection" Style="{DynamicResource RoundedButton}" Margin="95,90,0,0" Width="90" Height="30" Click="Button_Click_SelectionSort" HorizontalAlignment="Center"/>
+            <Button Content="SORT" 
+                    Style="{DynamicResource RoundedButton}" 
+                    Margin="40,30,0,0" Width="120" Height="32" 
+                    Click="Button_Click_Sort"  FontSize="20" />
+            <Path Data="M31.5,74 L165.50373,74" 
+                  Fill="{StaticResource ButtonRest}"
+                  HorizontalAlignment="Center" 
+                  Height="2" Width="135" 
+                  Margin="0,75,0,0" Stretch="Fill" 
+                  VerticalAlignment="Top"
+                  Stroke="{DynamicResource ButtonRest}" 
+                  StrokeStartLineCap="Round" 
+                  StrokeEndLineCap="Round" 
+                  StrokeThickness="2"/>
+            <Button Content="Quick" 
+                    Style="{DynamicResource RoundedButton}" 
+                    Margin="0,90,95,0" 
+                    Width="90" Height="30" 
+                    Click="Button_Click_QuickSort" 
+                    HorizontalAlignment="Center"/>
+            <Button Content="Selection" 
+                    Style="{DynamicResource RoundedButton}" 
+                    Margin="95,90,0,0" Width="90" Height="30" 
+                    Click="Button_Click_SelectionSort" 
+                    HorizontalAlignment="Center"/>
+            <Button Content="Insertion" 
+                    Style="{DynamicResource RoundedButton}" 
+                    Margin="0,135,95,0" 
+                    Width="90" Height="30" 
+                    Click="Button_Click_InsertionSort" 
+                    HorizontalAlignment="Center"/>
+            <Button Content="Radix" 
+                    Style="{DynamicResource RoundedButton}" 
+                    Margin="95,135,0,0" Width="90" Height="30" 
+                    Click="Button_Click_RadixSort" 
+                    HorizontalAlignment="Center"/>
         </Grid>
 
         <Grid Margin="0,10,10,10" Grid.Column="1">
-            <Grid.Effect>
-                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity="0.2" ShadowDepth="1"/>
-            </Grid.Effect>
             <Grid.Resources>
+                <SolidColorBrush x:Key="ChartFill">#FF882222</SolidColorBrush>
                 <Style TargetType="lvc:ColumnSeries">
                     <Setter Property="StrokeThickness" Value="0"/>
-                    <Setter Property="Stroke" Value="White"/>
-                    <Setter Property="Fill" Value="White"/>
+                    <Setter Property="Stroke" Value="{StaticResource ChartFill}"/>
+                    <Setter Property="Fill" Value="{StaticResource ChartFill}"/>
                     <!--<Setter Property="MaxColumnWidth" Value="5"/>-->
                     <Setter Property="LabelsPosition" Value="Merged"/>
                 </Style>

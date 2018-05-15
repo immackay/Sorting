@@ -17,7 +17,7 @@ namespace Sorting
         private int[] array;
         private bool _initialized = false;
         private int _sortingMethod = 1;
-        private int _size = 300;
+        private int _size = 350;
 
         public MainWindow()
         {
@@ -116,6 +116,12 @@ namespace Sorting
                             case 1:
                                 Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
                                 break;
+                            case 2:
+                                Algorithms.InsertionSort(array, SeriesCollection);
+                                break;
+                            case 3:
+                                Algorithms.RadixSort(array, 10, SeriesCollection);
+                                break;
                             default:
                                 Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
                                 break;
@@ -146,6 +152,38 @@ namespace Sorting
         private void Button_Click_SelectionSort(object sender, RoutedEventArgs e)
         {
             _sortingMethod = Algorithms.List.SelectionSort;
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _init();
+                    });
+                    break;
+                }
+            });
+        }
+
+        private void Button_Click_InsertionSort(object sender, RoutedEventArgs e)
+        {
+            _sortingMethod = Algorithms.List.InsertionSort;
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _init();
+                    });
+                    break;
+                }
+            });
+        }
+
+        private void Button_Click_RadixSort(object sender, RoutedEventArgs e)
+        {
+            _sortingMethod = Algorithms.List.RadixSort;
             Task.Run(() =>
             {
                 while (true)

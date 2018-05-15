@@ -13,11 +13,13 @@ namespace Sorting
     {
         public class List
         {
-            internal static readonly int QuickSort = 1;
             internal static readonly int SelectionSort = 0;
+            internal static readonly int QuickSort = 1;
+            internal static readonly int InsertionSort = 2;
+            internal static readonly int RadixSort = 3;
         };
 
-        public static int[] SelectionSort(int[] array, SeriesCollection series)
+        public static void SelectionSort(int[] array, SeriesCollection series)
         {
             int n = array.Length;
 
@@ -26,10 +28,7 @@ namespace Sorting
                 int i = j;
                 for (int k = j+1; k < n; k++)
                 {
-                    series[i].Values.Add((double)array[i]);
-                    series[i].Values.RemoveAt(0);
-                    series[j].Values.Add((double)array[j]);
-                    series[j].Values.RemoveAt(0);
+                    _SeriesSwap(series, i, j, array);
                     if (array[k] < array[i])
                     {
                         i = k;
@@ -37,68 +36,121 @@ namespace Sorting
                 }
                 if (i != j)
                 {
-                    int temp = array[j];
-                    array[j] = array[i];
-                    array[i] = temp;
+                    _ArraySwap(array, i, j);
                 }
             }
-            //int l = 0;
-            //foreach (ColumnSeries j in series)
-            //{
-            //    j.Values.Add((double)array[l]);
-            //    j.Values.RemoveAt(0);
-            //    l++;
-            //}
-            return array;
         }
 
-        public static int[] QuickSort(int[] array, int lo, int hi, SeriesCollection series)
+        public static void QuickSort(int[] array, int lo, int hi, SeriesCollection series)
         {
+            int _LomutoPartition(int[] A)
+            {
+                int pivot = A[hi];
+                int i = lo - 1;
+                for (int j = lo; j < hi; j++)
+                {
+                    if (A[j] < pivot)
+                    {
+                        i++;
+                        _ArraySwap(A, i, j);
+                        _SeriesSwap(series, i, j, A);
+                    }
+                }
+                int t2 = A[i + 1];
+                A[i + 1] = A[hi];
+                A[hi] = t2;
+
+                return i + 1;
+            }
             if (lo < hi)
             {
-                int p = _LomutoPartition(array, lo, hi, series);
-                array = QuickSort(array, lo, p - 1, series);
-                array = QuickSort(array, p + 1, hi, series);
+                int p = _LomutoPartition(array);
+                QuickSort(array, lo, p - 1, series);
+                QuickSort(array, p + 1, hi, series);
             }
+        }
+        
 
-            return array;
+        public static void InsertionSort(int[] array, SeriesCollection series)
+        {
+            for (int i = 1; i < array.Length - 1; i++)
+            {
+                int x = array[i];
+                int j = i - 1;
+                while (j >= 0 && array[j] > x)
+                {
+                    array[j + 1] = array[j];
+                    series[j + 1].Values.Add((double)array[j + 1]);
+                    series[j + 1].Values.RemoveAt(0);
+                    j--;
+                }
+                array[j + 1] = x;
+                series[j + 1].Values.Add((double)array[j + 1]);
+                series[j + 1].Values.RemoveAt(0);
+            }
         }
 
-        private static int _LomutoPartition(int[] A, int lo, int hi, SeriesCollection series)
+        public static void RadixSort(int[] array, int b, SeriesCollection series)
         {
-            int pivot = A[hi];
-            int i = lo - 1;
-            
-            // check if j is less than pivot and swap if so
-            for (int j = lo; j < hi; j++)
+            List<int>[] list_to_buckets(int[] A, int Base, int iteration) 
             {
-                if (A[j] < pivot)
+                List<int>[] buckets = new List<int>[Base];
+                for (int k = 0; k < Base; k++)
                 {
-                    i = i + 1;
-                    int t1 = A[i];
-                    A[i] = A[j];
-                    A[j] = t1;
-                    series[i].Values.Add((double)A[i]);
-                    series[i].Values.RemoveAt(0);
-                    series[j].Values.Add((double)A[j]);
-                    series[j].Values.RemoveAt(0);
+                    buckets[k] = new List<int>();
                 }
+                foreach (int i in A)
+                {
+                    int digit = (int)(i / Math.Pow(Base, iteration) % Base);
+                    buckets[digit].Add(i);
+                };
+                return buckets;
             }
 
-            // increment/decrement pointers
-            int t2 = A[i + 1];
-            A[i + 1] = A[hi];
-            A[hi] = t2;
+            List<int> buckets_to_list(List<int>[] buckets)
+            {
+                List<int> numbers = new List<int>();
+                foreach (List<int> bucket in buckets)
+                {
+                    foreach (int i in bucket)
+                    {
+                        numbers.Add(i);
+                    }
+                }
+                return numbers;
+            }
 
-            //int k = 0;
-            //foreach (ColumnSeries j in series)
-            //{
-            //    j.Values.Add((double)A[k]);
-            //    j.Values.RemoveAt(0);
-            //    k++;
-            //}
+            int maxval = array.Max();
 
-            return i + 1;
+            int j = 0;
+
+            while (Math.Pow(b, j) <= maxval)
+            {
+                array = buckets_to_list(list_to_buckets(array, b, j)).ToArray();
+                int i = 0;
+                foreach (ColumnSeries k in series)
+                {
+                    k.Values.Add((double)array[i]);
+                    k.Values.RemoveAt(0);
+                    i++;
+                }
+                j++;
+            }
+        }
+
+        private static void _ArraySwap(int[] array, int x, int y)
+        {
+            int temp = array[x];
+            array[x] = array[y];
+            array[y] = temp;
+        }
+
+        private static void _SeriesSwap(SeriesCollection series, int x, int y, int[] array)
+        {
+            series[x].Values.Add((double)array[x]);
+            series[x].Values.RemoveAt(0);
+            series[y].Values.Add((double)array[y]);
+            series[y].Values.RemoveAt(0);
         }
     }
 }
