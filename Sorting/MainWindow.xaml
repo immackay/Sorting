@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Sorting"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="800" Width="1280">
     <Grid>
         <lvc:CartesianChart Series="{Binding SeriesCollection}">
             <lvc:CartesianChart.AxisX>
