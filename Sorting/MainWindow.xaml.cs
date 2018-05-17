@@ -83,15 +83,24 @@ namespace Sorting
  
                 Action action = delegate
                 {
-                    int i = 0;
-                    foreach (ColumnSeries j in SeriesCollection)
-                    {
-                        j.Values.Add((double)array[i]);
-                        j.Values.RemoveAt(0);
-                        i++;
-                    }
-                    QuickSort(array, 0, array.Length - 1);
-                    // SetLecture();
+                    switch (_sortingMethod)
+                        {
+                            case 0:
+                                Algorithms.SelectionSort(array, SeriesCollection);
+                                break;
+                            case 1:
+                                Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
+                                break;
+                            case 2:
+                                Algorithms.InsertionSort(array, SeriesCollection);
+                                break;
+                            case 3:
+                                Algorithms.RadixSort(array, 10, SeriesCollection);
+                                break;
+                            default:
+                                Algorithms.QuickSort(array, 0, array.Length - 1, SeriesCollection);
+                                break;
+                        }
                 };
  
                 while (true)
@@ -101,7 +110,7 @@ namespace Sorting
                 }
             });
 #endif
-//#if NET45
+            //#if NET45
             Task.Run(() =>
             {
                 while (true)

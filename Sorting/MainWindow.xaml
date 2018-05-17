@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Sorting"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280" Background="#FF161616">
+        Title="MainWindow" Height="720" Width="1280" Background="#FF202024">
 
     <Window.OpacityMask>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -130,7 +130,7 @@
                     </Style.Triggers>
                 </Style>
             </Grid.Resources>
-            <lvc:CartesianChart Series="{Binding SeriesCollection}" Hoverable="False" DataTooltip="{x:Null}">
+            <lvc:CartesianChart Series="{Binding SeriesCollection, UpdateSourceTrigger=PropertyChanged}" Hoverable="False" DataTooltip="{x:Null}">
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis/>
                 </lvc:CartesianChart.AxisX>

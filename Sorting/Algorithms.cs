@@ -29,6 +29,13 @@ namespace Sorting
                 for (int k = j+1; k < n; k++)
                 {
                     _SeriesSwap(series, i, j, array);
+                    //int m = 0;
+                    //foreach (ColumnSeries o in series)
+                    //{
+                    //    o.Values.Add((double)array[m]);
+                    //    o.Values.RemoveAt(0);
+                    //    m++;
+                    //}
                     if (array[k] < array[i])
                     {
                         i = k;
@@ -53,6 +60,7 @@ namespace Sorting
                     {
                         i++;
                         _ArraySwap(A, i, j);
+                        Task.Delay(TimeSpan.FromMilliseconds(100));
                         _SeriesSwap(series, i, j, A);
                     }
                 }
